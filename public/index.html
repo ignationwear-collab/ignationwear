@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ignation Wear | Coming Soon</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    @font-face {
+      font-family: 'Rockybilly';
+      src: url('rockybilly-regular.ttf') format('truetype');
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+
+      /* ✅ Black with Half-Moon glow */
+      background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.15), transparent 60%), #000;
+      color: #fff;
+    }
+
+    .container {
+      animation: float 4s ease-in-out infinite;
+      max-width: 700px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #00f;
+      margin-bottom: 15px;
+    }
+
+    .tagline {
+      font-family: 'Rockybilly', cursive;
+      font-size: 1.5rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+
+    .ignation {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #00f;
+    }
+
+    input[type="email"] {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      width: 60%;
+      max-width: 300px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #ff00ff;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      text-shadow: 0 0 5px #fff;
+    }
+
+    button:hover {
+      background: #ff33cc;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* ✅ Responsive Design */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .tagline { font-size: 1.2rem; }
+      input[type="email"] {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 2rem; }
+      .tagline { font-size: 1rem; }
+      button { width: 100%; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ignation Wear</h1>
+
+    <p class="tagline">Your Vibe. Your Nation.</p>
+    <p class="tagline"><span class="ignation">IGNATION</span> is about to Drop.</p>
+    <p class="tagline">Behold the fire.</p>
+    <p class="tagline">Keep watching the space.</p>
+
+    <p>🔥 Exclusive T-Shirts Coming Soon. Stay tuned!</p>
+
+    <form id="notifyForm">
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <button type="submit">Notify Me</button>
+    </form>
+
+    <p id="responseMsg"></p>
+  </div>
+
+  <script>
+    document.getElementById("notifyForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await res.json();
+      document.getElementById("responseMsg").innerText = data.message;
+    });
+  </script>
+</body>
+</html>
