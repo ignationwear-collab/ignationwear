@@ -102,6 +102,11 @@
       .tagline { font-size: 1rem; }
       button { width: 100%; margin-top: 10px; }
     }
+
+    #responseMsg {
+      margin-top: 15px;
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -128,6 +133,7 @@
     document.getElementById("notifyForm").addEventListener("submit", async function(e) {
       e.preventDefault();
       const email = document.getElementById("email").value;
+      const msg = document.getElementById("responseMsg");
 
       try {
         // ✅ 1) Save to Google Form (Google Sheet)
@@ -145,10 +151,14 @@
           body: JSON.stringify({ email })
         });
 
-        const data = await res.json();
-        document.getElementById("responseMsg").innerText = data.message;
+        if (res.ok) {
+          msg.innerText = `✅ Thanks, ${email}! You're on the Ignation list. Check your inbox for confirmation.`;
+          document.getElementById("notifyForm").reset();
+        } else {
+          msg.innerText = "✅ Added to the list, but email confirmation failed. Try again later.";
+        }
       } catch (err) {
-        document.getElementById("responseMsg").innerText = "❌ Something went wrong. Try again.";
+        msg.innerText = "❌ Something went wrong. Try again.";
       }
     });
   </script>
