@@ -26,8 +26,6 @@
       min-height: 100vh;
       text-align: center;
       padding: 20px;
-
-      /* ✅ Black with Half-Moon glow */
       background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.15), transparent 60%), #000;
       color: #fff;
     }
@@ -93,14 +91,10 @@
       50% { transform: translateY(-15px); }
     }
 
-    /* ✅ Responsive Design */
     @media (max-width: 768px) {
       h1 { font-size: 2.5rem; }
       .tagline { font-size: 1.2rem; }
-      input[type="email"] {
-        width: 100%;
-        max-width: 100%;
-      }
+      input[type="email"] { width: 100%; max-width: 100%; }
     }
 
     @media (max-width: 480px) {
@@ -121,6 +115,7 @@
 
     <p>🔥 Exclusive T-Shirts Coming Soon. Stay tuned!</p>
 
+    <!-- ✅ Single Form -->
     <form id="notifyForm">
       <input type="email" id="email" placeholder="Enter your email" required>
       <button type="submit">Notify Me</button>
@@ -134,14 +129,27 @@
       e.preventDefault();
       const email = document.getElementById("email").value;
 
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      });
+      try {
+        // ✅ 1) Save to Google Form (Google Sheet)
+        await fetch("https://docs.google.com/forms/d/e/1FAIpQLSc9Lq4aLUw4C4CTnOIgcNJ_4NjK8zTsyeYoHC13tEG2595apg/formResponse", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "entry.225098407=" + encodeURIComponent(email)
+        });
 
-      const data = await res.json();
-      document.getElementById("responseMsg").innerText = data.message;
+        // ✅ 2) Send confirmation email (Vercel API)
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+        document.getElementById("responseMsg").innerText = data.message;
+      } catch (err) {
+        document.getElementById("responseMsg").innerText = "❌ Something went wrong. Try again.";
+      }
     });
   </script>
 </body>
