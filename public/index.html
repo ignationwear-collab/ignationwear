@@ -120,7 +120,7 @@
 
     <p>🔥 Exclusive T-Shirts Coming Soon. Stay tuned!</p>
 
-    <!-- ✅ Single Form -->
+    <!-- ✅ Notify Form -->
     <form id="notifyForm">
       <input type="email" id="email" placeholder="Enter your email" required>
       <button type="submit">Notify Me</button>
@@ -132,11 +132,16 @@
   <script>
     document.getElementById("notifyForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const msg = document.getElementById("responseMsg");
 
+      if (!email) {
+        msg.innerText = "❌ Please enter a valid email.";
+        return;
+      }
+
       try {
-        // ✅ 1) Save to Google Form (Google Sheet)
+        // ✅ 1) Save to Google Form (linked to Google Sheet)
         await fetch("https://docs.google.com/forms/d/e/1FAIpQLSc9Lq4aLUw4C4CTnOIgcNJ_4NjK8zTsyeYoHC13tEG2595apg/formResponse", {
           method: "POST",
           mode: "no-cors",
@@ -144,7 +149,7 @@
           body: "entry.225098407=" + encodeURIComponent(email)
         });
 
-        // ✅ 2) Send confirmation email (Vercel API)
+        // ✅ 2) Trigger confirmation email via your backend
         const res = await fetch("/api/subscribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -155,10 +160,11 @@
           msg.innerText = `✅ Thanks, ${email}! You're on the Ignation list. Check your inbox for confirmation.`;
           document.getElementById("notifyForm").reset();
         } else {
-          msg.innerText = "✅ Added to the list, but email confirmation failed. Try again later.";
+          msg.innerText = "⚠️ Added to the list, but email confirmation failed. Try again later.";
         }
       } catch (err) {
-        msg.innerText = "❌ Something went wrong. Try again.";
+        console.error(err);
+        msg.innerText = "❌ Something went wrong. Please try again.";
       }
     });
   </script>
